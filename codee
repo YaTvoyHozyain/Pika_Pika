@@ -1,1 +1,221 @@
+import networkx as nx
+import planarity
+from matplotlib import pyplot as plt
+import itertools
+import pylab
+
+
+def find_split_point(arr, oiu):
+    left_sum = 0
+    for weer in range(0, oiu):
+        left_sum += arr[weer]
+    right_sum = 0
+    for weer in range(oiu - 1, -1, -1):
+        right_sum += arr[weer]
+        left_sum -= arr[weer]
+        if right_sum == left_sum:
+            return weer
+    return -1
+
+
+def print_two_parts(art, oiu):
+    arr = art[0]
+    split_point = find_split_point(arr, oiu)
+    if (split_point == -1) or (split_point == oiu):
+        return 0
+    else:
+        str_lst = arr
+        int_lst = [int(x) for x in str_lst]
+        return int_lst
+
+
+edges = []
+qq = 0
+while qq < 1:
+    edges = [(1, 2), (1, 6), (2, 3), (4, 3), (4, 5), (1, 5), (2, 6), (3, 6), (5, 6), (3, 7), (7, 4)]
+    # edges = [(1, 2), (1, 9), (1, 10), (2, 3), (2, 8), (3, 4), (3, 7), (4, 6), (4, 5), (4, 7), (5, 10), (5, 6), (6, 7),
+    # (7, 9), (7, 8), (8, 9), (9, 10)]
+    # edges = [(2, 1), (2, 3), (2, 5), (2, 6), (2, 7), (2, 8), (4, 1), (4, 3), (4, 5),
+    # (4, 6), (4, 7), (4, 8), (1, 5), (3, 6), (7, 8)]
+    # edges = [(1, 2), (1, 3), (1, 4), (1, 5), (1, 6), (1, 7), (1, 8),
+    # (1, 10), (2, 3), (2, 4), (2, 5), (2, 6), (2, 7), (2, 8), (2, 9), (9, 3), (9, 4), (9, 5), (9, 6), (9, 7), (9, 8),
+    # (9, 10), (10, 3), (10, 4), (10, 5), (10, 6), (10, 7), (10, 8)]
+    n = 10000
+    t1 = n * n
+    G = nx.Graph()
+    print("Ввести рёбра сразу, нажмите 6?")
+    nn = int(input())
+    if nn != 6:
+        print("Введите рёбра, чтобы прекратить ввод введите в одну из вершин -1, -1")
+        for t in range(t1):
+            print("Введите вершины v1 и v2")
+            j, j1 = map(int, input().split())
+            if (j > 0) and (j1 > 0):
+                G.add_edge(j, j1)
+            else:
+                break
+    else:
+        G = nx.Graph(edges)
+    print(G.nodes())
+    print(G.edges())
+
+    w = 5
+    for t in range(w):
+        print("Хотите добавить вершину или ребро?")
+        print("1 - да")
+        q1 = int(input())
+        if q1 == 1:
+            print("Введите вершины v1 и v2")
+            j, j1 = map(int, input().split())
+            G.add_edge(j, j1)
+        else:
+            break
+    print(G.nodes())
+    print(G.edges())
+
+    print("Граф связный")
+    print(nx.is_connected(G))
+    if not nx.is_connected(G):
+        qq = 1
+        break
+    print("Граф планарный")
+    # проверка графа на планарность
+    print(planarity.is_planar(G))
+    if not planarity.is_planar(G):
+        qq = 1
+        break
+    # для начала надо выбрать способ "укладки" графа. Их много, возьмём для начала такой:
+    pos = nx.spring_layout(G)
+    plt.figure(facecolor='aqua')
+    ax = plt.axes()
+    ax.set_facecolor("red")
+    # рисуем узлы красным цветом, задаём размер узла
+    nx.draw_networkx_nodes(G, pos, node_color='#FFFF00', node_size=1500)
+    # рисуем рёбра жёлтым
+    nx.draw_networkx_edges(G, pos, edge_color='#8b4513')
+    # Добавим ещё подписи к узлам
+    nx.draw_networkx_labels(G, pos, font_size=25, font_family='Arial', font_color='#ff00ff')
+    # по умолчанию график будет снабжён осями с координатами, здесь они бессмысленны, так что отключаем
+    # plt.axis('off')
+    pylab.show()
+
+    print("Другое:")
+    H = G.to_directed()
+    stack = sorted(nx.simple_cycles(H))
+
+    # все пути print(stack)
+    nodev = G.nodes()
+    # вершины print(nodev)
+    u1 = len(stack)
+    # кол-во путей print(u1)
+    u2 = []
+    for u in range(u1 - 1):
+        if len(stack[u]) == len(nodev):
+            # вывод всех гамельтоновых циклов
+            u2.append(stack[u])
+            break
+    if u2:
+        print("гамильтоновы циклы в графе:")
+        print(u2)
+        print("Возьмём этот гамильтонов цикл:")
+        print(u2[0])
+    else:
+        print("гамильтонова цикла в графе НЕТ:")
+        break
+
+    print("Простые циклы во всём графе")
+    rr = nx.cycle_basis(G)
+    print(rr)
+    if sorted(rr[0]) == sorted(u2[0]):
+        print("Граф гамильтонов")
+        break
+
+    rr0 = []
+    for i in range(len(rr)):
+        rr0.append(len(rr[i]) - 2)
+    print(rr0)
+
+    n2 = len(rr0)
+    if sum(rr0) % 2 != 0:
+        print("Невозможно разделить на 2 графа")
+        break
+    perm_set = itertools.permutations(rr0)
+    tur, tur2 = [], []
+    tl, count, count2 = 0, 0, 0
+    for poi in perm_set:
+        count2 = count2 + 1
+        tre = [poi]
+        tur = print_two_parts(tre, n2)
+        if tur != 0:
+            if tl == 0:
+                tur2 = tur
+                tl = 1
+                break
+        else:
+            count = count + 1
+
+    loi, loi2 = [], []
+    ni, mun = 0, 0
+    if count == count2:
+        print("невозможно сделать перестановку")
+        qq = 1
+        break
+    else:
+        tt = sum(tur2)
+        for y in range(0, tt - 1, 1):
+            if tt // 2 > mun:
+                mun = mun + tur2[y]
+                loi.append(tur2[y])
+            else:
+                break
+        for y in range(len(loi), len(tur2), 1):
+            loi2.append(tur2[y])
+    print("Верная перестановка")
+    print(tur2)
+    print("Граф G1")
+    print(loi)
+    print("Граф G2")
+    print(loi2)
+    print("Максимальное значение половины G")
+    print(mun)
+
+    maxk0 = max(rr0)
+    fk, fk1, fk2, fk10, fk20, b = 0, 0, 0, 0, 0, 0
+    maxk = max(tur2)
+    for k in range(1, maxk + 1):
+        for i in range(len(loi)):
+            if loi[i] == k:
+                fk1 = fk1 + 1
+        for i in range(len(loi2)):
+            if loi2[i] == k:
+                fk2 = fk2 + 1
+        for i in range(len(rr0)):
+            if rr0[i] == k:
+                fk = fk + 1
+        if fk1 + fk2 == fk:
+            print("При k = ", k + 2)
+            print("fk1 + fk2 = fk")
+            print(fk1, " + ", fk2, " = ", fk)
+            print("Congate")
+            fk10 = fk1 * k + fk10
+            fk20 = fk2 * k + fk20
+            fk1, fk2, fk = 0, 0, 0
+        else:
+            print("При k = ", k + 2)
+            print("fk1 + fk2 = fk")
+            print(fk1, " + ", fk2, " = ", fk)
+            print("Error")
+            b = b + 1
+    print("fk10 = fk20")
+    print(fk10, " = ", fk20)
+    if fk10 != fk20:
+        print("Error")
+        b = b + 1
+    else:
+        print("Congate")
+    if b != 0:
+        print("Граф не удовлетворяет теореме Гринберга")
+    else:
+        print("Граф гамильтонов")
+    qq = 3
 
