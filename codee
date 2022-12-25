@@ -1,89 +1,64 @@
 import networkx as nx
 import planarity
 from matplotlib import pyplot as plt
-import itertools
+from itertools import compress, product
 import pylab
+import time
 
 
-def find_split_point(arr, oiu):
-    left_sum = 0
-    for weer in range(0, oiu):
-        left_sum += arr[weer]
-    right_sum = 0
-    for weer in range(oiu - 1, -1, -1):
-        right_sum += arr[weer]
-        left_sum -= arr[weer]
-        if right_sum == left_sum:
-            return weer
-    return -1
+def matritsa(G):
+    nod = G.nodes()
+    edges = list(G.edges())
+    n = len(nod)
+    m = len(edges)
+    adj = [[0] * n for _ in range(n)]
+    man, ram = [], []
+    for it in range(m):
+        ram.append(edges[it][0])
+        ram.append(edges[it][1])
+        man.append(ram)
+        ram = []
+    print(man)
+    for it in range(m):
+        r = man[it][0]
+        c = man[it][1]
+        adj[r - 1][c - 1] = adj[c - 1][r - 1] = 1
+    print([0], end='     ')
+    print(sorted(nod))
+    print('')
+    for it in range(n):
+        print([it + 1], '   ', adj[it])
 
 
-def print_two_parts(art, oiu):
-    arr = art[0]
-    split_point = find_split_point(arr, oiu)
-    if (split_point == -1) or (split_point == oiu):
-        return 0
-    else:
-        str_lst = arr
-        int_lst = [int(x) for x in str_lst]
-        return int_lst
-
-
-edges = []
-qq = 0
-while qq < 1:
-    edges = [(1, 2), (1, 6), (2, 3), (4, 3), (4, 5), (1, 5), (2, 6), (3, 6), (5, 6), (3, 7), (7, 4)]
-    # edges = [(1, 2), (1, 9), (1, 10), (2, 3), (2, 8), (3, 4), (3, 7), (4, 6), (4, 5), (4, 7), (5, 10), (5, 6), (6, 7),
-    # (7, 9), (7, 8), (8, 9), (9, 10)]
-    # edges = [(2, 1), (2, 3), (2, 5), (2, 6), (2, 7), (2, 8), (4, 1), (4, 3), (4, 5),
-    # (4, 6), (4, 7), (4, 8), (1, 5), (3, 6), (7, 8)]
-    # edges = [(1, 2), (1, 3), (1, 4), (1, 5), (1, 6), (1, 7), (1, 8),
-    # (1, 10), (2, 3), (2, 4), (2, 5), (2, 6), (2, 7), (2, 8), (2, 9), (9, 3), (9, 4), (9, 5), (9, 6), (9, 7), (9, 8),
-    # (9, 10), (10, 3), (10, 4), (10, 5), (10, 6), (10, 7), (10, 8)]
-    n = 10000
-    t1 = n * n
-    G = nx.Graph()
-    print("Ввести рёбра сразу, нажмите 6?")
-    nn = int(input())
-    if nn != 6:
-        print("Введите рёбра, чтобы прекратить ввод введите в одну из вершин -1, -1")
-        for t in range(t1):
-            print("Введите вершины v1 и v2")
-            j, j1 = map(int, input().split())
-            if (j > 0) and (j1 > 0):
-                G.add_edge(j, j1)
-            else:
-                break
-    else:
-        G = nx.Graph(edges)
-    print(G.nodes())
-    print(G.edges())
-
-    w = 5
-    for t in range(w):
-        print("Хотите добавить вершину или ребро?")
-        print("1 - да")
-        q1 = int(input())
-        if q1 == 1:
-            print("Введите вершины v1 и v2")
-            j, j1 = map(int, input().split())
-            G.add_edge(j, j1)
-        else:
-            break
-    print(G.nodes())
-    print(G.edges())
-
+def svy_zn(G):
     print("Граф связный")
     print(nx.is_connected(G))
     if not nx.is_connected(G):
-        qq = 1
-        break
+        return -1
+
+
+def pla_nar(G):
     print("Граф планарный")
-    # проверка графа на планарность
     print(planarity.is_planar(G))
     if not planarity.is_planar(G):
-        qq = 1
-        break
+        return -1
+
+
+def li_st(G):
+    t = 1
+    print("Есть листья")
+    nod = list(G.nodes)
+    for i in range(len(nod)):
+        if G.degree(nod[i]) == 1:
+            print("Falls")
+            t = -1
+            break
+    if t == 1:
+        print("True")
+    return t
+
+
+def picture(G):
     # для начала надо выбрать способ "укладки" графа. Их много, возьмём для начала такой:
     pos = nx.spring_layout(G)
     plt.figure(facecolor='aqua')
@@ -99,123 +74,268 @@ while qq < 1:
     # plt.axis('off')
     pylab.show()
 
-    print("Другое:")
-    H = G.to_directed()
-    stack = sorted(nx.simple_cycles(H))
 
-    # все пути print(stack)
-    nodev = G.nodes()
-    # вершины print(nodev)
-    u1 = len(stack)
-    # кол-во путей print(u1)
-    u2 = []
-    for u in range(u1 - 1):
-        if len(stack[u]) == len(nodev):
-            # вывод всех гамельтоновых циклов
-            u2.append(stack[u])
+def dob_ver_reb(G):
+    w = 100
+    for t in range(w):
+        print("Хотите добавить вершину или ребро?")
+        print("1 - да")
+        q1 = int(input())
+        if q1 == 1:
+            print("Введите вершины v1 и v2")
+            j, j1 = map(int, input().split())
+            G.add_edge(j, j1)
+        else:
             break
-    if u2:
-        print("гамильтоновы циклы в графе:")
-        print(u2)
-        print("Возьмём этот гамильтонов цикл:")
-        print(u2[0])
-    else:
-        print("гамильтонова цикла в графе НЕТ:")
-        break
+    print(G.nodes())
+    print(G.edges())
+    return G
 
-    print("Простые циклы во всём графе")
-    rr = nx.cycle_basis(G)
-    print(rr)
-    if sorted(rr[0]) == sorted(u2[0]):
-        print("Граф гамильтонов")
-        break
 
-    rr0 = []
-    for i in range(len(rr)):
-        rr0.append(len(rr[i]) - 2)
-    print(rr0)
-
-    n2 = len(rr0)
-    if sum(rr0) % 2 != 0:
-        print("Невозможно разделить на 2 графа")
-        break
-    perm_set = itertools.permutations(rr0)
-    tur, tur2 = [], []
-    tl, count, count2 = 0, 0, 0
-    for poi in perm_set:
-        count2 = count2 + 1
-        tre = [poi]
-        tur = print_two_parts(tre, n2)
-        if tur != 0:
-            if tl == 0:
-                tur2 = tur
-                tl = 1
-                break
+def del_ver_reb(G):
+    w = 100
+    for t in range(w):
+        print("Хотите удалить?")
+        print("вершину 1, ребро 2")
+        q1 = int(input())
+        if q1 == 1:
+            print("Введите вершину v1 ")
+            j = int(input())
+            G.remove_node(j)
+        elif q1 == 2:
+            print("Введите вершины v1 и v2")
+            j, j1 = map(int, input().split())
+            G.remove_edge(j, j1)
         else:
-            count = count + 1
+            break
+    print(G.nodes())
+    print(G.edges())
+    return G
 
-    loi, loi2 = [], []
-    ni, mun = 0, 0
-    if count == count2:
-        print("невозможно сделать перестановку")
-        qq = 1
-        break
-    else:
-        tt = sum(tur2)
-        for y in range(0, tt - 1, 1):
-            if tt // 2 > mun:
-                mun = mun + tur2[y]
-                loi.append(tur2[y])
-            else:
-                break
-        for y in range(len(loi), len(tur2), 1):
-            loi2.append(tur2[y])
-    print("Верная перестановка")
-    print(tur2)
-    print("Граф G1")
-    print(loi)
-    print("Граф G2")
-    print(loi2)
-    print("Максимальное значение половины G")
-    print(mun)
 
-    maxk0 = max(rr0)
-    fk, fk1, fk2, fk10, fk20, b = 0, 0, 0, 0, 0, 0
-    maxk = max(tur2)
-    for k in range(1, maxk + 1):
-        for i in range(len(loi)):
-            if loi[i] == k:
-                fk1 = fk1 + 1
-        for i in range(len(loi2)):
-            if loi2[i] == k:
-                fk2 = fk2 + 1
-        for i in range(len(rr0)):
-            if rr0[i] == k:
-                fk = fk + 1
-        if fk1 + fk2 == fk:
-            print("При k = ", k + 2)
-            print("fk1 + fk2 = fk")
-            print(fk1, " + ", fk2, " = ", fk)
-            print("Congate")
-            fk10 = fk1 * k + fk10
-            fk20 = fk2 * k + fk20
-            fk1, fk2, fk = 0, 0, 0
+def vn_gr(Z, nimb, char):  # print(nimb)
+    mass3 = [nimb]
+    mass4 = []
+    for i in range(len(char)-1):
+        poi = list(Z.adj[mass3[i]])
+        for j in range(len(poi) - 1):
+            if Z.degree[poi[j]] > Z.degree[poi[j + 1]]:
+                a = poi[j]
+                poi[j] = poi[j + 1]
+                poi[j + 1] = a  # print(poi[0], mass3[i])
+        c = poi[0]
+        b = mass3[i]
+        Z.remove_edge(b, c)
+        mass3.append(poi[0])  # print(nx.shortest_path(Z, poi[0], nimb))
+
+        if poi[0] == nimb:  # print(mass3)
+            break
+    for i in range(len(mass3)):
+        for j in range(len(mass3)):
+            if (mass3[i] == mass3[j]) and (i != j):
+                mass3[j] = 0  # print(mass3)
+    for i in range(len(mass3)):
+        if mass3[i] != 0:
+            mass4.append(mass3[i])
         else:
-            print("При k = ", k + 2)
-            print("fk1 + fk2 = fk")
-            print(fk1, " + ", fk2, " = ", fk)
-            print("Error")
-            b = b + 1
-    print("fk10 = fk20")
-    print(fk10, " = ", fk20)
-    if fk10 != fk20:
+            print(mass4)
+            break
+    return mass4
+
+
+def gran(H, Z, nod):
+    p, p1, rr, urt, char = [], [], [], [], []  # print(nod)
+    for i in range(len(nod)):
+        char.append(H.degree[nod[i]])
+    # print(char)
+    nimb = min(char)
+    for i in range(len(nod)):
+        if nimb == char[i]:
+            nimb = nod[i]
+            i = len(nod)
+    mass = [nimb]
+    mass2 = []
+    # print(nimb)
+    # внешняя грань
+    mass4 = vn_gr(Z, nimb, char)
+    for i in range(len(char)):
+        poi = list(H.adj[mass[i]])
+        for j in range(len(poi) - 1):
+            if H.degree[poi[j]] > H.degree[poi[j + 1]]:
+                a = poi[j]
+                poi[j] = poi[j + 1]
+                poi[j + 1] = a
+        mass = mass + poi
+        # print(mass)
+    for i in range(len(mass)):
+        for j in range(len(mass)):
+            if (mass[i] == mass[j]) and (i != j):
+                mass[j] = 0
+    # print(mass)
+    for i in range(len(mass)):
+        if mass[i] != 0:
+            mass2.append(mass[i])
+    # print(mass2)
+    # print((len(mass2)))
+    # print("! perviy prohod")
+    for u in range((len(mass2)) - 1):  # print("||||||||||||||||||||||||||||")
+        enod = mass2[u]
+        var = list(H.adj[enod])  # print("tuy", var)
+        H.remove_node(enod) # picture(H)
+        if nx.is_connected(H) is True:
+            for i in range(len(var) - 1):
+                for j in range(i + 1, len(var)):
+                    non = nx.shortest_path(H, source=var[i], target=var[j])
+                    p.append(non)  # print(p)
+            for i in range(len(p) - 1):
+                for j in range(i + 1, len(p)):
+                    urt.append(p[i] + p[j])  # print(urt)
+            for i in range(len(urt)):
+                urt[i] = list(set(urt[i]))  # print(urt)
+            for i in range(len(urt)):
+                for j in range(len(p)):
+                    if sorted(p[j]) == sorted(urt[i]):
+                        p[j] = [0]  # print(p)
+            for i in range(len(p)):
+                if p[i] != [0]:
+                    p1.append(p[i])  # print(p1)
+            for i in range(len(p1)):
+                p1[i].append(enod)
+                rr.append(p1[i])  # print(p1) # print(rr)
+            p, p1, urt = [], [], []
+    rr.append(mass4)
+    return rr
+
+
+t0 = time.perf_counter()
+
+edges = [(1, 2), (1, 6), (2, 3), (2, 8), (8, 3), (4, 3), (4, 5), (1, 5), (2, 6), (3, 6), (5, 6), (3, 7),
+         (7, 4)]
+# edges = [(1, 2), (2, 3), (4, 3), (4, 6), (5, 6), (1, 5), (1, 7), (7, 8), (8, 4)]
+# edges = [(1, 2), (1, 9), (1, 10), (2, 3), (2, 8), (3, 4), (3, 7), (4, 6), (4, 5), (4, 7), (5, 10), (5, 6), (6, 7),
+# (7, 9), (7, 8), (8, 9), (9, 10)]
+# edges = [(2, 1), (2, 3), (2, 5), (2, 6), (2, 7), (2, 8), (4, 1), (4, 3), (4, 5),
+# (4, 6), (4, 7), (4, 8), (1, 5), (3, 6), (7, 8)]
+# edges = [(1, 2), (1, 3), (1, 4), (1, 5), (1, 6), (1, 7), (1, 8),
+# (1, 10), (2, 3), (2, 4), (2, 5), (2, 6), (2, 7), (2, 8), (2, 9), (9, 3), (9, 4), (9, 5), (9, 6), (9, 7), (9, 8),
+# (9, 10), (10, 3), (10, 4), (10, 5), (10, 6), (10, 7), (10, 8)]
+n = 10000
+t1 = n * n
+G = nx.Graph()
+
+print("Ввести рёбра сразу, нажмите 6?")
+nn = int(input())
+if nn != 6:
+    edges = []
+    print("Введите рёбра, чтобы прекратить ввод введите в одну из вершин 0, 0")
+    for t in range(t1):
+        print("Введите вершины v1 и v2")
+        j, j1 = map(int, input().split())
+        if (j > 0) and (j1 > 0):
+            G.add_edge(j, j1)
+        else:
+            break
+else:
+    G = nx.Graph(edges)
+
+print(G.nodes())
+print(G.edges())
+matritsa(G)
+
+# проверка графа на связность
+svy = svy_zn(G)
+# проверка графа на планарность
+pla = pla_nar(G)
+# проверка на наличие листьев
+lst = li_st(G)
+# рисовка графа
+picture(G)
+# добавление вершин и рёбер
+G = dob_ver_reb(G)
+# удаление вершин и рёбер
+G = del_ver_reb(G)
+# делаем граф не направленным
+nod = list(G.nodes)
+edges = list(G.edges())
+
+H = nx.Graph(edges)
+Z = nx.Graph(edges)
+
+# поиск граней в графе
+rr = gran(H, Z, nod)
+
+print("Все грани графа")
+print(rr)
+
+rr0 = []
+loi = []
+loi2 = []
+for i in range(len(rr)):
+    rr0.append(len(rr[i]) - 2)
+print(rr0)
+
+
+n2 = len(rr0)
+if sum(rr0) % 2 != 0:
+    print("Невозможно разделить на 2 графа")
+    print("Error")
+if sum(rr0) % 2 == 0:  # even sum
+    for selectors in product([0, 1], repeat=len(rr0)):
+        if sum(compress(rr0, selectors)) == sum(rr0) // 2:
+            loi = list(compress(rr0, selectors))
+            loi2 = list(compress(rr0, (not s for s in selectors)))
+            print(loi, loi2)
+            print(sum(loi), sum(loi2))
+            break
+else:
+    # это попытка вывода ошибки
+    # raise ValueError("Can't partition into two parts with equal sums for {rr0!r}".format(**vars()))
+    print("Error")
+
+mun = sum(loi)
+print("Граф G1")
+print(loi)
+print("Граф G2")
+print(loi2)
+print("Максимальное значение половины G")
+print(mun)
+fk, fk1, fk2, fk10, fk20, b = 0, 0, 0, 0, 0, 0
+maxk = max(rr0)
+for k in range(1, maxk + 1):
+    for i in range(len(loi)):
+        if loi[i] == k:
+            fk1 = fk1 + 1
+    for i in range(len(loi2)):
+        if loi2[i] == k:
+            fk2 = fk2 + 1
+    for i in range(len(rr0)):
+        if rr0[i] == k:
+            fk = fk + 1
+    if fk1 + fk2 == fk:
+        print("При k = ", k + 2)
+        print("fk1 + fk2 = fk")
+        print(fk1, " + ", fk2, " = ", fk)
+        print("Congate")
+        fk10 = fk1 * k + fk10
+        fk20 = fk2 * k + fk20
+        fk1, fk2, fk = 0, 0, 0
+    else:
+        print("При k = ", k + 2)
+        print("fk1 + fk2 = fk")
+        print(fk1, " + ", fk2, " = ", fk)
         print("Error")
         b = b + 1
-    else:
-        print("Congate")
-    if b != 0:
-        print("Граф не удовлетворяет теореме Гринберга")
-    else:
-        print("Граф гамильтонов")
-    qq = 3
-
+print("fk10 = fk20")
+print(fk10, " = ", fk20)
+if fk10 != fk20:
+    print("Error")
+    b = b + 1
+else:
+    print("Congate")
+if b != 0:
+    print("Граф не удовлетворяет теореме Гринберга")
+else:
+    print("Граф гамильтонов")
+t1 = time.perf_counter()
+print(t1)
+print(t1 - t0)
