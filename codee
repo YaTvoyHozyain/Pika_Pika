@@ -113,107 +113,12 @@ def del_ver_reb(G):
     return G
 
 
-def vn_gr(Z, nimb, char):  # print(nimb)
-    mass3 = [nimb]
-    mass4 = []
-    for i in range(len(char) - 1):
-        poi = list(Z.adj[mass3[i]])
-        for j in range(len(poi) - 1):
-            if Z.degree[poi[j]] > Z.degree[poi[j + 1]]:
-                a = poi[j]
-                poi[j] = poi[j + 1]
-                poi[j + 1] = a # print(poi[0], mass3[i])
-        if len(poi) > 0:
-            c = poi[0]
-            b = mass3[i]
-            Z.remove_edge(b, c)
-            mass3.append(poi[0])  # print(nx.shortest_path(Z, poi[0], nimb))
-            if poi[0] == nimb:  # print(mass3)
-                break
-
-    for i in range(len(mass3)):
-        for j in range(len(mass3)):
-            if (mass3[i] == mass3[j]) and (i != j):
-                mass3[j] = 0  # print(mass3)
-    for i in range(len(mass3)):
-        if mass3[i] != 0:
-            mass4.append(mass3[i])
-        else:
-            print(mass4)
-            break
-    return mass4
-
-
-def gran(H, Z, nod):
-    p, p1, rr, urt, char = [], [], [], [], []  # print(nod)
-    for i in range(len(nod)):
-        char.append(H.degree[nod[i]])
-    # print(char)
-    nimb = min(char)
-    for i in range(len(nod)):
-        if nimb == char[i]:
-            nimb = nod[i]
-            i = len(nod)
-    mass = [nimb]
-    mass2 = []
-    # print(nimb)
-    # внешняя грань
-    mass4 = vn_gr(Z, nimb, char)
-    for i in range(len(char)):
-        poi = list(H.adj[mass[i]])
-        for j in range(len(poi) - 1):
-            if H.degree[poi[j]] > H.degree[poi[j + 1]]:
-                a = poi[j]
-                poi[j] = poi[j + 1]
-                poi[j + 1] = a
-        mass = mass + poi
-        # print(mass)
-    for i in range(len(mass)):
-        for j in range(len(mass)):
-            if (mass[i] == mass[j]) and (i != j):
-                mass[j] = 0
-    # print(mass)
-    for i in range(len(mass)):
-        if mass[i] != 0:
-            mass2.append(mass[i])
-    # print(mass2)
-    # print((len(mass2)))
-    # print("! perviy prohod")
-    for u in range((len(mass2)) - 1):  # print("||||||||||||||||||||||||||||")
-        enod = mass2[u]
-        var = list(H.adj[enod])  # print("tuy", var)
-        H.remove_node(enod) # picture(H)
-        if nx.is_connected(H) is True:
-            for i in range(len(var) - 1):
-                for j in range(i + 1, len(var)):
-                    non = nx.shortest_path(H, source=var[i], target=var[j])
-                    p.append(non)  # print(p)
-            for i in range(len(p) - 1):
-                for j in range(i + 1, len(p)):
-                    urt.append(p[i] + p[j])  # print(urt)
-            for i in range(len(urt)):
-                urt[i] = list(set(urt[i]))  # print(urt)
-            for i in range(len(urt)):
-                for j in range(len(p)):
-                    if sorted(p[j]) == sorted(urt[i]):
-                        p[j] = [0]  # print(p)
-            for i in range(len(p)):
-                if p[i] != [0]:
-                    p1.append(p[i])  # print(p1)
-            for i in range(len(p1)):
-                p1[i].append(enod)
-                rr.append(p1[i])  # print(p1) # print(rr)
-            p, p1, urt = [], [], []
-    rr.append(mass4)
-    return rr
-
-
 t0 = time.perf_counter()
 
-# edges = [(1, 2), (3, 2), (3, 4), (1, 4), (1, 5), (5, 2), (5, 3), (4, 5), (1, 6), (6, 2), (7, 2), (7, 3), (3, 8), (8, 4),
-# (4, 9), (9, 1)]
-edges = [(1, 2), (1, 6), (2, 3), (2, 8), (8, 3), (4, 3), (4, 5), (1, 5), (2, 6), (3, 6), (5, 6), (3, 7),
-(7, 4), (7, 9), (9, 8)]
+edges = [(1, 2), (3, 2), (3, 4), (1, 4), (1, 5), (5, 2), (5, 3), (4, 5), (1, 6), (6, 2), (7, 2), (7, 3), (3, 8), (8, 4),
+(4, 9), (9, 1)]
+# edges = [(1, 2), (1, 6), (2, 3), (2, 8), (8, 3), (4, 3), (4, 5), (1, 5), (2, 6), (3, 6), (5, 6), (3, 7),
+# (7, 4), (7, 9), (9, 8)]
 # edges = [(1, 2), (2, 3), (4, 3), (4, 6), (5, 6), (1, 5), (1, 7), (7, 8), (8, 4)]
 # edges = [(1, 2), (1, 9), (1, 10), (2, 3), (2, 8), (3, 4), (3, 7), (4, 6), (4, 5), (4, 7), (5, 10), (5, 6), (6, 7),
 # (7, 9), (7, 8), (8, 9), (9, 10)]
@@ -262,10 +167,122 @@ nod = list(G.nodes)
 edges = list(G.edges())
 
 H = nx.Graph(edges)
-Z = nx.Graph(edges)
-
+Z = nx.Graph()
+rr1 = []
 # поиск граней в графе
-rr = gran(H, Z, nod)
+
+url = []
+url2 = []
+url3 = []
+print("Количество граней", 2+len(edges)-len(nod))
+for i in range(1, len(nod)):
+    rr = (nx.cycle_basis(H, i))
+    # print(rr)
+    for j in range(len(rr)):
+        url.append(len(rr[j]))
+
+    for k in range(3, max(url)+1):
+        for j in range(len(url)):
+            trur = k
+            if url[j] == trur:
+                url2.append(rr[j])
+                # print("iqweryqoertqweru", url2)
+    sas = 0
+    # print(url2)
+    for j1 in range(len(url2)):
+        for j2 in range(len(url2)):
+            # print(sorted(url2[j1]), "==", sorted(url2[j2]))
+
+            if sorted(url2[j1]) != sorted(url2[j2]):
+                sas = sas + 1
+                # print(sas)
+        if sas == len(url2) - 1:
+            url3.append(url2[j1])
+            # print("iqweryqoertqweru", url3)
+        sas = 0
+    # print(url3)
+
+    url = []
+sas = 0
+url4 = url3
+# print("iqweryqoertqweru")
+
+for j1 in range(len(url3)):
+    for j2 in range(len(url3)):
+        if sorted(url3[j1]) == sorted(url4[j2]) and j1 != j2:
+            url4[j2] = [0]
+# print(url4)
+
+url5 = []
+for j1 in range(len(url4)):
+    if url4[j1] != [0]:
+        url5.append(url4[j1])
+url4 = []
+
+url5.sort(key=len)
+# print(url5)
+ilm = []
+# выбрать deg(v) - 1 минимальных граней в которых есть эта вершина и взять максимальный
+for po in range(len(url5)):
+    ilm.append(len(url5[po]))
+# print(max(ilm))
+
+nudez = []
+url6 = []
+for j0 in range(len(nod)):
+    nudez.append(G.degree(nod[j0]))
+# print(nudez)
+oikl = 0
+oikl2 = []
+lai = []
+url7 = []
+for j1 in range(len(nudez)):
+    for j2 in range(len(url5)):
+        for j3 in range(len(url5[j2])):
+            if nod[j1] == url5[j2][j3]:
+                oikl = oikl + 1
+                oikl2.append(j2)
+    for yq in range(nudez[j1] - 1):
+        url6.append(url5[oikl2[yq]])
+    if len(url5[oikl2[len(oikl2)-1]]) != max(ilm):
+        url6.append(url5[oikl2[nudez[j1] - 1]])
+    if len(url6) != nudez[j1]:
+        lai.append(j1)
+    url7 = url7 + url6
+    url6 = []
+    oikl = 0
+    oikl2 = []
+# print(url7)
+
+
+for j1 in range(len(url7)):
+    for j2 in range(len(url7)):
+        if url7[j1] == url7[j2] and j1 != j2:
+            url7[j2] = [0]
+# print(url7)
+
+url8 = []
+for j1 in range(len(url7)):
+    if url7[j1] != [0]:
+        url8.append(url7[j1])
+url7 = []
+# print(url8)
+
+for j1 in range(len(nudez)):
+    for j2 in range(len(url8)):
+        for j3 in range(len(url8[j2])):
+            if nod[j1] == url8[j2][j3]:
+                oikl = oikl + 1
+    # print(oikl, " != ", nudez[j1], "->", nod[j1])
+    if oikl != nudez[j1]:
+        oikl2.append(nod[j1])
+    oikl = 0
+# print(oikl2)
+
+
+url8.append(oikl2)
+# print(url8)
+rr = url8
 
 print("Все грани графа")
 print(rr)
