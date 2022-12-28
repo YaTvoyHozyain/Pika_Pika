@@ -182,7 +182,6 @@ def grani(G):
         for j in range(len(rr)):
             url.append(len(rr[j]))
         # print(url)
-        gg = max(url)
         for j in range(len(url)):
             url2.append(rr[j])
         url2.sort(key=len)
@@ -278,7 +277,7 @@ def grani(G):
     return url8
 
 
-def pruffs(G):
+def pruffs(rr):
     print("Все грани графа")
     rr.sort(key=len)
     print(rr)
