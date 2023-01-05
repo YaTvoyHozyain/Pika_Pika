@@ -67,14 +67,6 @@ def sharn(G):
             print("True")
             return False
     return True
-    # H = nx.DiGraph(G)
-    # tiil = sorted(nx.simple_cycles(H))
-    # for j in range(len(tiil)):
-    #     if len(tiil[j]) == len(G.nodes):
-    #         print("False")
-    #         return True
-    # print("True")
-    # return False
 # -4
 
 
