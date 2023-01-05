@@ -67,14 +67,16 @@ def li_st(G):
 
 def sharn(G):
     print("Есть шарниры")
-    H = nx.DiGraph(G)
-    tiil = sorted(nx.simple_cycles(H))
-    for j in range(len(tiil)):
-        if len(tiil[j]) == len(G.nodes):
-            print("False")
-            return True
-    print("True")
-    return False
+    H = nx.Graph(G)
+    ui = len(H.nodes)
+    for i in range(ui):
+        H = nx.Graph(G)
+        H.remove_node(i+1)
+        if not nx.is_connected(H):
+            print("True")
+            return False
+    print("False")
+    return True
 # -4
 
 
@@ -458,7 +460,10 @@ def vis():
                     for i in range(len(edges2)):
                         if edges2[i] != 0:
                             edges.append(edges2[i])
-                    main(edges)
+                    if edges:
+                        main(edges)
+                    else:
+                        print("нет рёбер")
             for i in range(len(poos2)):  # перерисовываем вершины
                 for j in range(len(blc)):
                     if i == blc[j]:
