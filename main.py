@@ -26,57 +26,55 @@ def isBetween(a, b, c):
     return True
 
 
-def graf(G, edges):
-    G = nx.Graph(edges)
-    print("Вершины")
-    print(G.nodes())
-    print("Рёбра")
-    print(G.edges())
-    return G
-
 
 def svy_zn(G):
-    print("Граф связный")
-    print(nx.is_connected(G))
     if not nx.is_connected(G):
+        print("Граф связный")
+        print(nx.is_connected(G))
         return False
     return True
 # -1
 
 
 def pla_nar(G):
-    print("Граф планарный")
-    print(planarity.is_planar(G))
     if not planarity.is_planar(G):
+        print("Граф планарный")
+        print(planarity.is_planar(G))
         return False
     return True
 # -2
 
 
 def li_st(G):
-    print("Есть листья")
     nod = list(G.nodes)
     for i in range(len(nod)):
         if G.degree(nod[i]) == 1:
+            print("Есть листья")
             print("True")
             return False
-    print("False")
     return True
 # -3
 
 
 def sharn(G):
-    print("Есть шарниры")
     H = nx.Graph(G)
     ui = len(H.nodes)
     for i in range(ui):
         H = nx.Graph(G)
         H.remove_node(i+1)
         if not nx.is_connected(H):
+            print("Есть шарниры")
             print("True")
             return False
-    print("False")
     return True
+    # H = nx.DiGraph(G)
+    # tiil = sorted(nx.simple_cycles(H))
+    # for j in range(len(tiil)):
+    #     if len(tiil[j]) == len(G.nodes):
+    #         print("False")
+    #         return True
+    # print("True")
+    # return False
 # -4
 
 
@@ -116,7 +114,7 @@ def proverki(G):
         t = sharn(G)
     if t:
         # рисовка графа
-        # picture(G)
+        picture(G)
         # все грани графа
         rr = grani(G)
         # проверка граней
@@ -124,7 +122,6 @@ def proverki(G):
 
 
 def ver_shins(G):
-    print("Порядок вершин верный")
     old = G.nodes
     old2 = max(old)
     old3 = sum(old)
@@ -132,9 +129,9 @@ def ver_shins(G):
     for i in range(1, old2 + 1):
         old4 = old4 + i
     if old3 != old4:
+        print("Порядок вершин верный")
         print("False")
         return False
-    print("True")
     return True
 # -5
 
@@ -334,11 +331,11 @@ def pruffs(rr):
                 if rr0[i] == k:
                     fk = fk + 1
             if fk1 + fk2 == fk:
-                print("При k = ", k + 2)
-                print("fk1 + fk2 = fk")
-                print(fk1, " + ", fk2, " = ", fk)
-                print("Congate")
-                print("")
+                # print("При k = ", k + 2)
+                # print("fk1 + fk2 = fk")
+                # print(fk1, " + ", fk2, " = ", fk)
+                # print("Congate")
+                # print("")
                 fk10 = fk1 * k + fk10
                 fk20 = fk2 * k + fk20
                 fk1, fk2, fk = 0, 0, 0
@@ -349,16 +346,13 @@ def pruffs(rr):
                 print("Error")
                 print("")
                 b = b + 1
-        print("Сумма половин графа")
-        print("fk10 = fk20")
-        print(fk10, " = ", fk20)
         if fk10 != fk20:
+            print("Сумма половин графа")
+            print("fk10 = fk20")
+            print(fk10, " = ", fk20)
             print("Error")
             print("")
             b = b + 1
-        else:
-            print("Congate")
-            print("")
         if b != 0:
             print("Граф не удовлетворяет теореме Гринберга")
             print("")
@@ -369,9 +363,8 @@ def pruffs(rr):
 
 def main(edges):
     t0 = time.perf_counter()
-    G = nx.Graph()
     # создание графа
-    G = graf(G, edges)
+    G = nx.Graph(edges)
     # обязатедбные вещи
     proverki(G)
     t1 = time.perf_counter()
@@ -379,11 +372,16 @@ def main(edges):
 
 
 def vis():
+    print("")
+    print("ЛКМ - добавить ребро")
+    print("Колёсико - Добавить вершину")
+    print("ПКМ - удалить ребро или вершину")
+    print("")
     W, H = 800, 600
     pygame.init()
     sc = pygame.display.set_mode((W, H), pygame.RESIZABLE)
     pygame.display.set_caption("Гамильтоновы графы")
-    # pygame.display.set_icon(pygame.image.load("asd.bmp"))
+    pygame.display.set_icon(pygame.image.load("asd.bmp"))
     clock = pygame.time.Clock()
     FPS = 60
     BLACK = (0, 0, 0)
@@ -408,6 +406,9 @@ def vis():
     unn = False
     unn2 = False
     while running:
+        print("")
+        print("")
+        print("")
         clock.tick(FPS)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
