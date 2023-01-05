@@ -26,14 +26,12 @@ def isBetween(a, b, c):
     return True
 
 
-
 def svy_zn(G):
     if not nx.is_connected(G):
         print("Граф связный")
         print(nx.is_connected(G))
         return False
     return True
-# -1
 
 
 def pla_nar(G):
@@ -42,7 +40,6 @@ def pla_nar(G):
         print(planarity.is_planar(G))
         return False
     return True
-# -2
 
 
 def li_st(G):
@@ -53,7 +50,6 @@ def li_st(G):
             print("True")
             return False
     return True
-# -3
 
 
 def sharn(G):
@@ -67,7 +63,6 @@ def sharn(G):
             print("True")
             return False
     return True
-# -4
 
 
 def picture(G):
@@ -125,7 +120,6 @@ def ver_shins(G):
         print("False")
         return False
     return True
-# -5
 
 
 def grani(G):
@@ -134,57 +128,41 @@ def grani(G):
     url = []
     url2 = []
     url3 = []
-    # print("Количество граней", 2 + len(edges) - len(nod))
     for i in range(1, len(nod) + 1):
-        rr = (nx.cycle_basis(G, nod[i-1]))  # print(i, " = ", rr)
+        rr = (nx.cycle_basis(G, nod[i-1]))
         for j in range(len(rr)):
-            url.append(len(rr[j]))  # print(url)
+            url.append(len(rr[j]))
         for j in range(len(url)):
             url2.append(rr[j])
-        # url2.sort(key=len)
-        sas = 0  # print("kjshgfjksdhg", url2)
+        sas = 0
         for j1 in range(len(url2)):
             for j2 in range(len(url2)):
-                # print(sorted(url2[j1]), "==", sorted(url2[j2]))
                 if sorted(url2[j1]) != sorted(url2[j2]):
-                    sas = sas + 1  # print(sas)
+                    sas = sas + 1
             if sas == len(url2) - 1:
-                url3.append(url2[j1])  # print("iqweryqoertqweru", url3)
+                url3.append(url2[j1])
             sas = 0
-        for i in range(len(url3) - 1):
-            if len(url3[i]) > len(url3[i + 1]):
-                tau = url3[i]
-                url3[i] = url3[i + 1]
-                url3[i + 1] = tau
-                i = -1
-        # print(url3)
-        url3.sort(key=len)  # print(url3)
-        # print(url3)
-        url = []  # print(url3)
-    url4 = url3  # print("iqweryqoertqweru")
+        url3.sort(key=len)
+        url = []
+    url4 = url3
     for j1 in range(len(url3)):
         for j2 in range(len(url3)):
             if sorted(url3[j1]) == sorted(url4[j2]) and j1 != j2:
-                url4[j2] = [0]  # print(url4)
+                url4[j2] = [0]
     url5 = []
     for j1 in range(len(url4)):
         if url4[j1] != [0]:
             url5.append(url4[j1])
     url5.sort(key=len)
-    # for po in range(len(url5)):
-    #     if url5[po] == [2, 3, 4, 5, 1]:
-    #         url5[po] = [0]
-    # print(url5)
-    ilm = []  # выбрать deg(v) - 1 минимальных граней в которых есть эта вершина и взять максимальный
+    ilm = []
     for po in range(len(url5)):
-        ilm.append(len(url5[po]))  # print(max(ilm))
+        ilm.append(len(url5[po]))
     nudez = []
     url6 = []
     for j0 in range(len(nod)):
         nudez.append(G.degree(nod[j0]))
-
-    # print(nod)
-    # print(nudez)
+    print(G.nodes)
+    print(G.edges)
     oikl2 = []
     url7 = []
     for j1 in range(len(nudez)):
@@ -194,41 +172,38 @@ def grani(G):
                     oikl2.append(j2)
         for yq in range(nudez[j1] - 1):
             url6.append(url5[oikl2[yq]])
-        # print(url6)
-        # print(oikl2)
-        gg1 = max(ilm)  # print(gg1)  # print(oikl2[0])  # print(url5)
+        gg1 = max(ilm)
         if len(oikl2) > 1:
             if len(url5[oikl2[len(oikl2) - 1]]) != gg1:
-                url6.append(url5[oikl2[nudez[j1] - 1]])  # print(url6)
+                url6.append(url5[oikl2[nudez[j1] - 1]])
         url7 = url7 + url6
-        # print(url7)
         url6 = []
-        oikl2 = []  # print(url7)
+        oikl2 = []
     oikl = 0
     for j1 in range(len(url7)):
         for j2 in range(len(url7)):
             if url7[j1] == url7[j2] and j1 != j2:
-                url7[j2] = [0]  # print(url7)
+                url7[j2] = [0]
     url8 = []
     for j1 in range(len(url7)):
         if url7[j1] != [0]:
             url8.append(url7[j1])
-    url8.sort(key=len)  # print(url8)
+    url8.sort(key=len)
     url10 = []
     for j in range(len(url8)):
-        url10.append(len(url8[j]))  # print(url10)
+        url10.append(len(url8[j]))
     ttre = []
     for j in range(len(url10) - 1):
         if url10[j] < url10[j + 1]:
-            ttre.append(url8[j + 1])   # print(ttre)
+            ttre.append(url8[j + 1])
     ttre1 = []
     ttre2 = []
     for j in range(len(ttre)):
         ttre1.append(sum(ttre[j]))
-        ttre2.append(len(ttre[j]))  # print(ttre1)  print(ttre2)
+        ttre2.append(len(ttre[j]))
     ttre3 = []
     for j in range(len(ttre)):
-        ttre3.append(ttre1[j] // ttre2[j])  # print(ttre3)
+        ttre3.append(ttre1[j] // ttre2[j])
     hight = []
     t = 0
     url9 = []
@@ -238,7 +213,7 @@ def grani(G):
             ttre3.remove(min(ttre3))
             for j in range(len(ttre1)):
                 if ttre1[j] // ttre2[j] == find:
-                    hight.append(ttre[j])  # print(hight)
+                    hight.append(ttre[j])
         for j2 in range(len(url8)):
             for j3 in range(len(hight)):
                 if url8[j2] != hight[j3]:
@@ -247,17 +222,15 @@ def grani(G):
                 url9.append(url8[j2])
             t = 0
     else:
-        url9 = url8  # print(url9)
-
+        url9 = url8
     for j1 in range(len(nudez)):
         for j2 in range(len(url9)):
             for j3 in range(len(url9[j2])):
                 if nod[j1] == url9[j2][j3]:
-                    oikl = oikl + 1  # print(oikl, " != ", nudez[j1], "->", nod[j1])
+                    oikl = oikl + 1
         if oikl < nudez[j1]:
             oikl2.append(nod[j1])
         oikl = 0
-    # print(oikl2)
     H = nx.Graph(G)
     t1 = list(H.nodes)
     r = 0
@@ -279,21 +252,17 @@ def grani(G):
                 if a[j2] == b[j2]:
                     yap2 = yap[j1]
                     break
-    # print(oikl2)
-    # print(yap2)
-    url9.append(yap2)  # print(url8)
+    url9.append(yap2)
     return url9
 
 
 def pruffs(rr):
     t = True
     print("")
-    # print("Все грани графа")
     rr.sort(key=len)
-    # print(rr)
     rr0, loi, loi2 = [], [], []
     for i in range(len(rr)):
-        rr0.append(len(rr[i]) - 2)  # print(rr0)
+        rr0.append(len(rr[i]) - 2)
     if sum(rr0) % 2 != 0:
         print("Невозможно разделить на 2 половины")
         t = False
@@ -305,7 +274,7 @@ def pruffs(rr):
             for selectors in product([0, 1], repeat=len(rr0)):
                 if sum(compress(rr0, selectors)) == sum(rr0) // 2:
                     loi = list(compress(rr0, selectors))
-                    loi2 = list(compress(rr0, (not s for s in selectors)))  # print(loi, loi2)  # print(sum(loi), sum(loi2))
+                    loi2 = list(compress(rr0, (not s for s in selectors)))
                     break
         else:
             t = False
@@ -323,11 +292,8 @@ def pruffs(rr):
                 if rr0[i] == k:
                     fk = fk + 1
             if fk1 + fk2 == fk:
-                # print("При k = ", k + 2)
-                # print("fk1 + fk2 = fk")
-                # print(fk1, " + ", fk2, " = ", fk)
-                # print("Congate")
-                # print("")
+                # print("При k = ", k + 2)  print("fk1 + fk2 = fk")  print(fk1, " + ", fk2, " = ", fk)
+                # print("Congate") print("")
                 fk10 = fk1 * k + fk10
                 fk20 = fk2 * k + fk20
                 fk1, fk2, fk = 0, 0, 0
@@ -451,9 +417,9 @@ def vis():
                         if edges2[i] != 0:
                             edges.append(edges2[i])
                     if edges:
-                                print("")
-                                print("")
-                                print("")
+                        print("")
+                        print("")
+                        print("")
                         main(edges)
                     else:
                         print("нет рёбер")
