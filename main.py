@@ -130,7 +130,7 @@ def proverki(G):
         t = sharn(G)
     if t:
         # рисовка графа
-        picture(G)
+        # picture(G)
         # все грани графа
         rr = grani(G)
         # проверка граней
