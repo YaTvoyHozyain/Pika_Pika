@@ -406,9 +406,6 @@ def vis():
     unn = False
     unn2 = False
     while running:
-        print("")
-        print("")
-        print("")
         clock.tick(FPS)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -462,6 +459,9 @@ def vis():
                         if edges2[i] != 0:
                             edges.append(edges2[i])
                     if edges:
+                                print("")
+                                print("")
+                                print("")
                         main(edges)
                     else:
                         print("нет рёбер")
