@@ -27,23 +27,7 @@ def isBetween(a, b, c):
 
 
 def graf(G, edges):
-    n = 10000
-    t1 = n * n
-    print("Ввести рёбра сразу, нажмите 6?")
-    # nn = int(input())
-    nn = 6
-    if nn != 6:
-        edges = []
-        print("Введите рёбра, чтобы прекратить ввод введите в одну из вершин 0, 0")
-        for t in range(t1):
-            print("Введите вершины v1 и v2")
-            j, j1 = map(int, input().split())
-            if (j > 0) and (j1 > 0):
-                G.add_edge(j, j1)
-            else:
-                break
-    else:
-        G = nx.Graph(edges)
+    G = nx.Graph(edges)
     print("Вершины")
     print(G.nodes())
     print("Рёбра")
