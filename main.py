@@ -367,7 +367,7 @@ def vis():
         clock.tick(FPS)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False # обнуляем первое смещение (при повторном вызове ниже)
+                running = False
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
                     nodes = []
