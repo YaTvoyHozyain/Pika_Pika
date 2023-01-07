@@ -252,7 +252,8 @@ def grani(G):
                 if a[j2] == b[j2]:
                     yap2 = yap[j1]
                     break
-    url9.append(yap2)
+    if yap2:
+        url9.append(yap2)
     return url9
 
 
