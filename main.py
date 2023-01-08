@@ -345,7 +345,7 @@ def vis():
     pygame.init()
     sc = pygame.display.set_mode((W, H), pygame.RESIZABLE)
     pygame.display.set_caption("Гамильтоновы графы")
-    pygame.display.set_icon(pygame.image.load("asd.bmp"))
+    # pygame.display.set_icon(pygame.image.load("asd.bmp"))
     clock = pygame.time.Clock()
     FPS = 60
     BLACK = (0, 0, 0)
