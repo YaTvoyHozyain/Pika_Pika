@@ -1,4 +1,5 @@
 import networkx as nx
+import Cython
 import planarity
 from matplotlib import pyplot as plt
 from itertools import compress, product
@@ -278,6 +279,10 @@ def pruffs(rr):
                     break
         else:
             t = False
+    print("")
+    print("Части графа")
+    print(loi, "  ",loi2)
+    print("")
     if t:
         fk, fk1, fk2, fk10, fk20, b = 0, 0, 0, 0, 0, 0
         maxk = max(rr0)
