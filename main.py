@@ -129,7 +129,7 @@ def grani(G):
     url2 = []
     url3 = []
     for i in range(1, len(nod) + 1):
-        rr = (nx.cycle_basis(G, nod[i-1]))
+        rr = (nx.cycle_basis(G, i))
         for j in range(len(rr)):
             url.append(len(rr[j]))
         for j in range(len(url)):
@@ -161,8 +161,6 @@ def grani(G):
     url6 = []
     for j0 in range(len(nod)):
         nudez.append(G.degree(nod[j0]))
-    print(G.nodes)
-    print(G.edges)
     oikl2 = []
     url7 = []
     for j1 in range(len(nudez)):
@@ -252,8 +250,7 @@ def grani(G):
                 if a[j2] == b[j2]:
                     yap2 = yap[j1]
                     break
-    if yap2:
-        url9.append(yap2)
+    url9.append(yap2)
     return url9
 
 
@@ -261,6 +258,8 @@ def pruffs(rr):
     t = True
     print("")
     rr.sort(key=len)
+    print("Все грани графа:")
+    print(rr)
     rr0, loi, loi2 = [], [], []
     for i in range(len(rr)):
         rr0.append(len(rr[i]) - 2)
@@ -293,8 +292,11 @@ def pruffs(rr):
                 if rr0[i] == k:
                     fk = fk + 1
             if fk1 + fk2 == fk:
-                # print("При k = ", k + 2)  print("fk1 + fk2 = fk")  print(fk1, " + ", fk2, " = ", fk)
-                # print("Congate") print("")
+                print("При k = ", k + 2)
+                print("fk1 + fk2 = fk")
+                print(fk1, " + ", fk2, " = ", fk)
+                print("Congate")
+                print("")
                 fk10 = fk1 * k + fk10
                 fk20 = fk2 * k + fk20
                 fk1, fk2, fk = 0, 0, 0
@@ -305,13 +307,16 @@ def pruffs(rr):
                 print("Error")
                 print("")
                 b = b + 1
+        print("Сумма половин графа")
+        print("fk10 = fk20")
+        print(fk10, " = ", fk20)
         if fk10 != fk20:
-            print("Сумма половин графа")
-            print("fk10 = fk20")
-            print(fk10, " = ", fk20)
             print("Error")
             print("")
             b = b + 1
+        else:
+            print("Congate")
+            print("")
         if b != 0:
             print("Граф не удовлетворяет теореме Гринберга")
             print("")
