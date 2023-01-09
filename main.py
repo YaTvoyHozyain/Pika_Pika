@@ -1,5 +1,4 @@
 import networkx as nx
-import Cython
 import planarity
 from matplotlib import pyplot as plt
 from itertools import compress, product
@@ -69,17 +68,17 @@ def sharn(G):
 def picture(G):
     # для начала надо выбрать способ "укладки" графа. Их много, возьмём для начала такой:
     pos = nx.spring_layout(G)
-    plt.figure(facecolor='aqua')
+    plt.figure(facecolor='white')
     ax = plt.axes()
-    ax.set_facecolor("red")
-    # рисуем узлы красным цветом, задаём размер узла
-    nx.draw_networkx_nodes(G, pos, node_color='#FFFF00', node_size=1500)
-    # рисуем рёбра жёлтым
-    nx.draw_networkx_edges(G, pos, edge_color='#8b4513')
+    ax.set_facecolor("white")
+    # рисуем узлы, задаём размер узла
+    nx.draw_networkx_nodes(G, pos, node_color='#0000FF', node_size=1500)
+    # рисуем рёбра
+    nx.draw_networkx_edges(G, pos, edge_color='#000000')
     # Добавим ещё подписи к узлам
-    nx.draw_networkx_labels(G, pos, font_size=25, font_family='Arial', font_color='#ff00ff')
+    nx.draw_networkx_labels(G, pos, font_size=25, font_family='Arial', font_color='#000000')
     # по умолчанию график будет снабжён осями с координатами, здесь они бессмысленны, так что отключаем
-    # plt.axis('off')
+    plt.axis('off')
     pylab.show()
 
 
