@@ -1,11 +1,11 @@
 import networkx as nx
-import planarity
 from matplotlib import pyplot as plt
 from itertools import compress, product
 import pylab
 import pygame
 from itertools import zip_longest
 import time
+from networkx import algorithms
 
 
 def func_chunk_itertools(lst):
@@ -37,9 +37,9 @@ def is_connected(graph):
 
 # функция, проверяющая планарность графа
 def is_planar(graph):
-    if not planarity.is_planar(graph):
+    if not algorithms.is_planar(graph):
         print("Граф планарный")
-        print(planarity.is_planar(graph))
+        print(algorithms.is_planar(graph))
         return False
     return True
 
